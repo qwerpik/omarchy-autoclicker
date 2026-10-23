@@ -1,0 +1,21 @@
+#!/usr/bin/python3
+import os
+import pathlib
+import sys
+
+directory = pathlib.Path(__file__).resolve().parent.parent / "share/autoclicker"
+sys.path.insert(0, str(directory))
+import settings
+
+try:
+    config = settings.load()
+except (OSError, ValueError) as error:
+    print(f"Cannot load autoclicker settings: {error}", file=sys.stderr)
+    raise SystemExit(1)
+binary = str(directory / "autoclicker-worker")
+args = [binary, "--interval-ms", str(config["interval_ms"]), "--button", config["button"]]
+if sys.argv[1:] == ["--check"]:
+    args.append("--check")
+elif sys.argv[1:]:
+    raise SystemExit("Usage: autoclicker-run [--check]")
+os.execv(binary, args)

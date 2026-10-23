@@ -1,0 +1,111 @@
+#!/usr/bin/python3
+"""Rofi controls and saved settings, styled with the current Omarchy palette."""
+import pathlib
+import re
+import subprocess
+import sys
+import tomllib
+
+home = pathlib.Path.home()
+share = pathlib.Path(__file__).resolve().parent.parent / 'share/autoclicker'
+sys.path.insert(0, str(share))
+import settings
+
+command = str(pathlib.Path(__file__).resolve().parent / 'autoclicker')
+try:
+    palette = tomllib.loads((home / '.local/state/omarchy/current/theme/colors.toml').read_text())
+except (OSError, ValueError):
+    palette = {}
+
+def color(key, fallback):
+    value = palette.get(key, fallback)
+    return value if isinstance(value, str) and re.fullmatch(r'#[0-9a-fA-F]{6}', value) else fallback
+
+colors = '; '.join(
+    f'{key}: {color(key, default)}'
+    for key, default in (('background', '#1a1b26'), ('foreground', '#a9b1d6'),
+                         ('accent', '#7aa2f7'), ('selection', '#292e42'))
+)
+
+def is_active():
+    return subprocess.run(['systemctl', '--user', 'is-active', '--quiet', 'autoclicker.service']).returncode == 0
+
+def rofi(title, message, rows, *, edit=None):
+    style = '* { ' + colors + '; } listview { lines: ' + str(len(rows)) + '; }'
+    args = ['rofi', '-dmenu', '-p', title, '-mesg', message,
+            '-theme', str(share / 'menu.rasi')]
+    if edit is None:
+        args += ['-no-custom', '-format', 'i', '-selected-row', '0']
+    else:
+        args += ['-filter', '']
+        style += ' inputbar { children: [prompt, entry]; spacing: 12px; }'
+    result = subprocess.run(args + ['-theme-str', style],
+                            input='\n'.join(rows) + ('\n' if rows else ''),
+                            text=True, capture_output=True)
+    if result.returncode == 1:
+        return None
+    if result.returncode != 0:
+        print(result.stderr, end='', file=sys.stderr)
+        raise SystemExit(result.returncode)
+    return result.stdout.strip() if edit is not None else int(result.stdout.strip())
+
+def save(config):
+    settings.save(config)
+    subprocess.run(['omarchy-shell', '-q', 'user.autoclicker', 'refresh'],
+                   stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+
+def settings_menu():
+    subprocess.run([command, 'stop'], check=True)
+    while True:
+        config = settings.load()
+        choice = rofi('Autoclicker settings', 'Saved automatically · Clicking paused · Home toggles', [
+            f'Click interval · {config["interval_ms"]} ms',
+            f'Mouse button · {config["button"].capitalize()}',
+            'Reset to 5 ms / Left', 'Back',
+        ])
+        if choice is None or choice == 3:
+            return
+        if choice == 0:
+            message = f'Current: {config["interval_ms"]} ms · Enter 1–60000 · Esc cancels'
+            while True:
+                value = rofi('Interval (ms)', message, [], edit=config['interval_ms'])
+                if value is None:
+                    break
+                try:
+                    config['interval_ms'] = int(value)
+                    settings.validate(config)
+                except ValueError:
+                    config = settings.load()
+                    message = 'Enter a whole number between 1 and 60000 ms'
+                    continue
+                save(config)
+                break
+        elif choice == 1:
+            button = rofi('Mouse button', 'Each click uses the selected mouse button',
+                          ['Left', 'Right', 'Middle', 'Back'])
+            if button is not None and button < 3:
+                config['button'] = ['left', 'right', 'middle'][button]
+                save(config)
+        elif choice == 2:
+            save(settings.DEFAULTS.copy())
+
+while True:
+    try:
+        config = settings.load()
+    except (OSError, ValueError) as error:
+        choice = rofi('Autoclicker settings error', str(error), ['Reset settings', 'Close'])
+        if choice == 0:
+            subprocess.run([command, 'stop'], check=True)
+            save(settings.DEFAULTS.copy())
+            continue
+        break
+    active = is_active()
+    choice = rofi('Autoclicker · ' + ('ON' if active else 'OFF'),
+                  settings.description(config) + '\nHome toggles · Esc closes',
+                  ['Stop clicking' if active else 'Start clicking', 'Settings', 'Close'])
+    if choice is None or choice == 2:
+        break
+    if choice == 0:
+        raise SystemExit(subprocess.run([command, 'stop' if active else 'start']).returncode)
+    if choice == 1:
+        settings_menu()

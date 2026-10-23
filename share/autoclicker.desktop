@@ -1,0 +1,11 @@
+[Desktop Entry]
+Type=Application
+Name=Autoclicker
+GenericName=Mouse autoclicker
+Comment=Configure click interval and mouse button; Home toggles clicking
+Exec=@BINDIR@/autoclicker menu
+Icon=input-mouse
+Terminal=false
+Categories=Utility;Accessibility;
+Keywords=autoclick;clicker;mouse;Home;5ms;
+StartupNotify=false

@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" width="128" height="128" role="img" aria-label="Autoclicker logo">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#24283b"/>
+      <stop offset="1" stop-color="#1a1b26"/>
+    </linearGradient>
+    <linearGradient id="cursor" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#c0caf5"/>
+      <stop offset="1" stop-color="#a9b1d6"/>
+    </linearGradient>
+  </defs>
+  <rect x="4" y="4" width="120" height="120" rx="28" fill="url(#bg)"/>
+  <rect x="4" y="4" width="120" height="120" rx="28" fill="none" stroke="#7aa2f7" stroke-opacity=".35" stroke-width="2"/>
+  <!-- click ripples -->
+  <g fill="none" stroke-linecap="round">
+    <circle cx="50" cy="48" r="13" stroke="#7aa2f7" stroke-width="4"/>
+    <circle cx="50" cy="48" r="24" stroke="#7aa2f7" stroke-width="3" stroke-opacity=".55"/>
+    <circle cx="50" cy="48" r="35" stroke="#7aa2f7" stroke-width="2" stroke-opacity=".25"/>
+  </g>
+  <!-- pointer -->
+  <path d="M50 48 L50 100 L62 88 L71 107 L80 103 L71 84 L88 84 Z"
+        fill="url(#cursor)" stroke="#1a1b26" stroke-width="4" stroke-linejoin="round"/>
+  <!-- speed ticks -->
+  <g stroke="#9ece6a" stroke-width="4" stroke-linecap="round">
+    <line x1="92" y1="30" x2="104" y2="24"/>
+    <line x1="96" y1="44" x2="110" y2="44"/>
+    <line x1="92" y1="58" x2="104" y2="64"/>
+  </g>
+</svg>

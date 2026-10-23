@@ -1,0 +1,49 @@
+#!/bin/bash
+set -euo pipefail
+bindir=$(dirname -- "$(readlink -f -- "$0")")
+
+if [[ ${1:-} == menu ]]; then
+  exec "$bindir/autoclicker-menu"
+fi
+if [[ ${1:-} == info ]]; then
+  shift
+  exec "$bindir/autoclicker-info" "$@"
+fi
+
+# Serialize rapid Home presses; systemd owns the worker and its lifecycle.
+exec 9>"${XDG_RUNTIME_DIR:?}/autoclicker-toggle.lock"
+flock 9
+
+case "${1:-toggle}" in
+  start|toggle)
+    if systemctl --user is-active --quiet autoclicker.service; then
+      if [[ ${1:-toggle} == toggle ]]; then
+        systemctl --user stop autoclicker.service
+        notify-send -a Autoclicker -r 5050 -t 1500 'Autoclicker OFF' || true
+      fi
+    else
+      if ! "$bindir/autoclicker-run" --check; then
+        notify-send -a Autoclicker -u critical 'Autoclicker could not connect to Wayland' || true
+        exit 1
+      fi
+      systemctl --user start autoclicker.service
+      notify-send -a Autoclicker -r 5050 -t 1500 'Autoclicker ON' "$("$bindir/autoclicker-info" --description) · Home to stop" || true
+    fi
+    ;;
+  stop)
+    systemctl --user stop autoclicker.service
+    ;;
+  status)
+    systemctl --user is-active autoclicker.service
+    ;;
+  check)
+    exec "$bindir/autoclicker-run" --check
+    ;;
+  *)
+    echo 'Usage: autoclicker [menu|start|toggle|stop|status|check|info]' >&2
+    exit 2
+    ;;
+esac
+
+# Refresh every bar instance immediately; its timer also detects external stops.
+omarchy-shell -q user.autoclicker refresh >/dev/null 2>&1 || true

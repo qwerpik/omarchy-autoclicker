@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 520 300" width="520" height="300" role="img" aria-label="Illustration of the Autoclicker Rofi menu">
+  <style>
+    text { font-family: "JetBrainsMono Nerd Font", "JetBrains Mono", ui-monospace, monospace; font-size: 15px; }
+  </style>
+  <rect x="0" y="0" width="520" height="300" rx="14" fill="#16161e"/>
+  <rect x="40" y="30" width="440" height="240" fill="#1a1b26" stroke="#7aa2f7" stroke-width="2"/>
+  <text x="58" y="68" fill="#7aa2f7">Autoclicker · ON</text>
+  <text x="58" y="100" fill="#a9b1d6">Left click · 5 ms (200/s)</text>
+  <text x="58" y="122" fill="#565f89">Home toggles · Esc closes</text>
+  <rect x="56" y="140" width="408" height="36" fill="#292e42"/>
+  <text x="66" y="164" fill="#7aa2f7">Stop clicking</text>
+  <text x="66" y="204" fill="#a9b1d6">Settings</text>
+  <text x="66" y="244" fill="#a9b1d6">Close</text>
+</svg>

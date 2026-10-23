@@ -1,0 +1,27 @@
+* {
+    background: #1a1b26;
+    foreground: #a9b1d6;
+    accent: #7aa2f7;
+    selection: #292e42;
+    font: "monospace 12";
+    background-color: @background;
+    text-color: @foreground;
+}
+window {
+    width: 440px;
+    padding: 16px;
+    border: 2px;
+    border-color: @accent;
+    border-radius: 0px;
+}
+mainbox {
+    children: [ inputbar, message, listview ];
+    spacing: 12px;
+}
+inputbar { children: [ prompt ]; }
+prompt { text-color: @accent; }
+message { padding: 2px 0px 8px; }
+listview { lines: 2; fixed-height: true; spacing: 4px; }
+element { padding: 9px; }
+element selected { background-color: @selection; text-color: @accent; }
+element-text { background-color: inherit; text-color: inherit; }

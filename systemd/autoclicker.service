@@ -1,0 +1,11 @@
+[Unit]
+Description=Wayland autoclicker
+PartOf=graphical-session.target
+After=graphical-session.target
+
+[Service]
+Type=exec
+ExecStart=@BINDIR@/autoclicker-run
+KillSignal=SIGTERM
+TimeoutStopSec=2
+Restart=no

@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "id": "user.autoclicker",
+  "name": "Autoclicker",
+  "version": "1.0.0",
+  "description": "Live status and controls for the configurable autoclicker",
+  "kinds": ["bar-widget"],
+  "entryPoints": {"barWidget": "Widget.qml"},
+  "barWidget": {
+    "displayName": "Autoclicker",
+    "category": "Status",
+    "allowMultiple": false,
+    "defaultSection": "right"
+  }
+}

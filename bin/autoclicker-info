@@ -1,0 +1,17 @@
+#!/usr/bin/python3
+import json
+import pathlib
+import subprocess
+import sys
+
+sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent.parent / "share/autoclicker"))
+import settings
+
+config = settings.load()
+config["active"] = subprocess.run(
+    ["systemctl", "--user", "is-active", "--quiet", "autoclicker.service"]
+).returncode == 0
+if sys.argv[1:] == ["--description"]:
+    print(settings.description(config))
+else:
+    print(json.dumps(config))
