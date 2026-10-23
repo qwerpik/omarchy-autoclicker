@@ -1,29 +1,52 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" width="128" height="128" role="img" aria-label="Autoclicker logo">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" width="128" height="128" role="img" aria-label="Autoclicker logo: a mouse pointer clicking, with a lightning bolt">
   <defs>
-    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0" stop-color="#24283b"/>
-      <stop offset="1" stop-color="#1a1b26"/>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#2a2f4a"/>
+      <stop offset="1" stop-color="#15161f"/>
     </linearGradient>
+    <linearGradient id="sheen" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#ffffff" stop-opacity=".10"/>
+      <stop offset=".5" stop-color="#ffffff" stop-opacity="0"/>
+    </linearGradient>
+    <filter id="shadow" x="-30%" y="-30%" width="160%" height="160%">
+      <feDropShadow dx="0" dy="2.5" stdDeviation="2.5" flood-color="#000" flood-opacity=".45"/>
+    </filter>
+    <linearGradient id="ring" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#9fe2ff"/>
+      <stop offset="1" stop-color="#5b8def"/>
+    </linearGradient>
+    <radialGradient id="glow" cx=".5" cy=".5" r=".5">
+      <stop offset="0" stop-color="#7aa2f7" stop-opacity=".55"/>
+      <stop offset="1" stop-color="#7aa2f7" stop-opacity="0"/>
+    </radialGradient>
     <linearGradient id="cursor" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0" stop-color="#c0caf5"/>
-      <stop offset="1" stop-color="#a9b1d6"/>
+      <stop offset="0" stop-color="#ffffff"/>
+      <stop offset="1" stop-color="#c0caf5"/>
+    </linearGradient>
+    <linearGradient id="badge" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#c3f08a"/>
+      <stop offset="1" stop-color="#7fbf4a"/>
     </linearGradient>
   </defs>
+  
   <rect x="4" y="4" width="120" height="120" rx="28" fill="url(#bg)"/>
-  <rect x="4" y="4" width="120" height="120" rx="28" fill="none" stroke="#7aa2f7" stroke-opacity=".35" stroke-width="2"/>
-  <!-- click ripples -->
-  <g fill="none" stroke-linecap="round">
-    <circle cx="50" cy="48" r="13" stroke="#7aa2f7" stroke-width="4"/>
-    <circle cx="50" cy="48" r="24" stroke="#7aa2f7" stroke-width="3" stroke-opacity=".55"/>
-    <circle cx="50" cy="48" r="35" stroke="#7aa2f7" stroke-width="2" stroke-opacity=".25"/>
+  <rect x="4" y="4" width="120" height="120" rx="28" fill="url(#sheen)"/>
+  <rect x="4.75" y="4.75" width="118.5" height="118.5" rx="27.25" fill="none" stroke="#7aa2f7" stroke-opacity=".28" stroke-width="1.5"/>
+  <!-- click burst -->
+  <circle cx="46" cy="46" r="30" fill="url(#glow)"/>
+  <g fill="none" stroke="url(#ring)" stroke-linecap="round">
+    <circle cx="46" cy="46" r="10" stroke-width="4.5"/>
+    <path d="M46 66 A20 20 0 1 1 66 46" stroke-width="3.5" stroke-opacity=".75"/>
+    <path d="M46 76 A30 30 0 1 1 76 46" stroke-width="2.5" stroke-opacity=".35"/>
   </g>
   <!-- pointer -->
-  <path d="M50 48 L50 100 L62 88 L71 107 L80 103 L71 84 L88 84 Z"
-        fill="url(#cursor)" stroke="#1a1b26" stroke-width="4" stroke-linejoin="round"/>
-  <!-- speed ticks -->
-  <g stroke="#9ece6a" stroke-width="4" stroke-linecap="round">
-    <line x1="92" y1="30" x2="104" y2="24"/>
-    <line x1="96" y1="44" x2="110" y2="44"/>
-    <line x1="92" y1="58" x2="104" y2="64"/>
+  <g filter="url(#shadow)">
+    <path d="M46.0 46.0 L46.0 90.1 L56.5 80.1 L64.4 96.9 L72.8 93.2 L64.9 76.5 L79.6 76.5 Z"
+          fill="url(#cursor)" stroke="#15161f" stroke-width="3.5" stroke-linejoin="round"/>
   </g>
+  <!-- speed badge -->
+  <g filter="url(#shadow)">
+    <circle cx="97" cy="97" r="21" fill="url(#badge)" stroke="#15161f" stroke-width="3.5"/>
+  </g>
+  <path d="M100 82 L88 99.5 H96 L93.5 112 L106 94 H98 Z" fill="#1a1b26" stroke="#1a1b26" stroke-width="1" stroke-linejoin="round"/>
 </svg>
